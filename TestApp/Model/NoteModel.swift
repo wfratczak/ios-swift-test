@@ -5,7 +5,13 @@
 //
 
 import Foundation
+import CoreData
 
-class NoteModel {
+extension NoteModel {
+
+    override public func awakeFromInsert() {
+        super.awakeFromInsert()
+        self.date = Date() as NSDate
+    }
     
 }
