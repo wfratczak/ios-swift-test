@@ -16,16 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         IQKeyboardManager.sharedManager().enable = true
         DataManager.shared.setup(with: persistentContainer.viewContext)
-
-        let note = NoteModel(context: persistentContainer.viewContext)
-        note.text = "asdasdasdas"
-        
-        try! DataManager.shared.save(note: note)
-        
-        DataManager.shared.loadNotes { (model) in
-            
-        }
-        
         return true
     }
 

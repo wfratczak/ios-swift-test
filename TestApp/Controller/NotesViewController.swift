@@ -20,28 +20,28 @@ extension Const {
     }
 }
 
-class NoteCell: UICollectionViewCell {
-    
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var dateLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        layer.cornerRadius = Const.NoteCell.cornerRadius
-        layer.masksToBounds = true
-    }
-}
-
 class NotesViewController: UIViewController {
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var addButton: UIButton!
-    fileprivate let transition = BubbleTransition()
+    
+    // MARK: Model
+    var notes: [NoteModel] = []
+    fileprivate lazy var dataContext: NSManagedObjectContext? = {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        return delegate?.persistentContainer.viewContext
+    }()
+    
     fileprivate lazy var defaultDateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.dateFormat = Const.NoteView.noteDateFormat
         return dateFormatter
     }()
-    var notes: [NoteModel] = []
+    
+    // MARK: Outlets
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var addButton: UIButton!
+    
+    // MARK: Transition properties
+    fileprivate let transition = BubbleTransition()
+    fileprivate var transitionSender: UIView?
     
     // MARK: Lifecycle
     
@@ -57,8 +57,6 @@ class NotesViewController: UIViewController {
     }
 
     // MARK: Navigation
-    
-    var transitionSender: UIView?
     
     public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let controller = segue.destination as! NoteViewController
@@ -89,8 +87,8 @@ extension NotesViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? NoteCell else {return}
-        cell.dateLabel.text = defaultDateFormatter.string(from: notes[indexPath.item].date as! Date)
+        guard let cell = cell as? NoteCell, let date = notes[indexPath.item].date else {return}
+        cell.dateLabel.text = defaultDateFormatter.string(from: date as Date)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -20,10 +20,9 @@ class DataManager {
         self.context = context
     }
 
-    func loadNotes(completion: (_ objects: [NoteModel]?) -> Void) {
+    func loadNotes() throws -> [NoteModel]? {
         let request = NSFetchRequest<NoteModel>(entityName: String(describing: NoteModel.classForCoder()))
-        let reuslt = try! context?.fetch(request)
-        
+        return try context?.fetch(request)
     }
     
     func save(note: NoteModel) throws {
