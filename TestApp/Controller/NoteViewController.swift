@@ -29,7 +29,8 @@ class NoteViewController: UIViewController {
     var viewType: NoteViewType = .add
     var note: NoteModel?
     var delegate: NoteViewControllerDelegate?
-    @IBOutlet weak var rightButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var noteTextView: SZTextView!
     
@@ -49,10 +50,11 @@ class NoteViewController: UIViewController {
         
         switch viewType {
         case .add:
-            rightButton.setImage(#imageLiteral(resourceName: "save"), for: .normal)
+            deleteButton.isEnabled = false
+            deleteButton.alpha = 0.5
         case .display:
-            rightButton.setImage(#imageLiteral(resourceName: "delete"), for: .normal)
-            noteTextView.isEditable = false
+            deleteButton.isEnabled = true
+            deleteButton.alpha = 1
         }
     }
 
@@ -62,11 +64,12 @@ class NoteViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func rightButtonAction(_ sender: UIButton) {
-        switch viewType {
-        case .add: saveNote()
-        case .display: showDeleteConfirmationAlert()
-        }
+    @IBAction func saveButtonAction(_ sender: UIButton) {
+        saveNote()
+    }
+    
+    @IBAction func deleteButtonAction(_ sender: UIButton) {
+        showDeleteConfirmationAlert()
     }
     
     // MARK: - Save Helpers
@@ -80,11 +83,22 @@ class NoteViewController: UIViewController {
     }
     
     private func saveNoteAndDismiss() {
-//        DataManager.shared.saveNote(with: noteTextView.text, completion: { (note) in
-//            
-//        })
-//        delegate?.noteViewControllerDidSave(note: note)
-//        dismiss(animated: true, completion: nil)
+        if note == nil {
+            note = NoteModel.object()
+        }
+        guard let note = note else {
+            print("Can not save the note. Note instance is nil")
+            return
+        }
+        
+        note.text = noteTextView.text
+        do {
+            try DataManager.shared.save(note: note)
+            delegate?.noteViewControllerDidSave(note: note)
+            dismiss(animated: true, completion: nil)
+        } catch {
+            print("Can not save current note")
+        }
     }
     
     private func showNoteAlert() {
@@ -109,8 +123,14 @@ class NoteViewController: UIViewController {
     
     private func deleteNote() {
         guard let note = note else {return}
-        delegate?.noteViewControllerDidDelete(note: note)
-        dismiss(animated: true, completion: nil)
+        do {
+            try DataManager.shared.delete(note: note)
+            dismiss(animated: true, completion: {
+                self.delegate?.noteViewControllerDidDelete(note: note)
+            })
+        } catch {
+            print("Can not delete current note.")
+        }
     }
     
 }

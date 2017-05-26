@@ -1,4 +1,4 @@
-//
+ //
 //  DataManager.swift
 //  TestApp
 //
@@ -14,7 +14,7 @@ class DataManager {
     static let shared = DataManager()
     private init() {}
     
-    private var context: NSManagedObjectContext?
+    private(set) var context: NSManagedObjectContext?
     
     func setup(with context: NSManagedObjectContext) {
         self.context = context
@@ -30,7 +30,8 @@ class DataManager {
         try context?.save()
     }
     
-    func remove(note: NoteModel) {
+    func delete(note: NoteModel) throws {
         context?.delete(note)
+        try context?.save()
     }
 }

@@ -23,11 +23,8 @@ extension Const {
 class NotesViewController: UIViewController {
     
     // MARK: Model
-    var notes: [NoteModel] = []
-    fileprivate lazy var dataContext: NSManagedObjectContext? = {
-        let delegate = UIApplication.shared.delegate as? AppDelegate
-        return delegate?.persistentContainer.viewContext
-    }()
+    var filteredNotes: [NoteModel] = []
+    var allNotes: [NoteModel] = []
     
     fileprivate lazy var defaultDateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
@@ -37,6 +34,7 @@ class NotesViewController: UIViewController {
     
     // MARK: Outlets
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var addButton: UIButton!
     
     // MARK: Transition properties
@@ -47,12 +45,20 @@ class NotesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureView()
+        loadContent()
     }
 
     // MARK: Config
     
-    private func configureView() {
+    private func loadContent() {
+        do {
+            guard let fetchedObjects = try DataManager.shared.loadNotes() else {return}
+            allNotes = fetchedObjects
+            filteredNotes = allNotes
+            collectionView.reloadData()
+        } catch {
+            print("Error. Can not load notes from database.")
+        }
         
     }
 
@@ -68,7 +74,7 @@ class NotesViewController: UIViewController {
             let indexPath = collectionView.indexPath(for: sender)
             {
             controller.viewType = .display
-            controller.note = notes[indexPath.item]
+            controller.note = filteredNotes[indexPath.item]
         } else if sender is UIButton {
             controller.viewType = .add
         }
@@ -79,7 +85,7 @@ class NotesViewController: UIViewController {
 extension NotesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return notes.count
+        return filteredNotes.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -87,7 +93,7 @@ extension NotesViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? NoteCell, let date = notes[indexPath.item].date else {return}
+        guard let cell = cell as? NoteCell, let date = filteredNotes[indexPath.item].date else {return}
         cell.dateLabel.text = defaultDateFormatter.string(from: date as Date)
     }
     
@@ -139,15 +145,42 @@ extension NotesViewController: UIViewControllerTransitioningDelegate {
 extension NotesViewController: NoteViewControllerDelegate {
     
     func noteViewControllerDidSave(note: NoteModel) {
-        notes.append(note)
+        allNotes.append(note)
+        filteredNotes = allNotes
+        searchBar.resignFirstResponder()
         collectionView.reloadData()
     }
     
     func noteViewControllerDidDelete(note: NoteModel) {
-        guard let index = notes.index(where: {return $0.objectID == note.objectID}) else {return}
-        notes.remove(at: notes.startIndex.distance(to: index))
-        collectionView.reloadData()
+        guard let indexPath = collectionView.indexPathsForSelectedItems?.first else {return}
+        guard let indexForAllNotes = allNotes.index(where: {return $0.objectID == note.objectID}) else {return}
+        
+        collectionView.performBatchUpdates({ 
+            self.collectionView.deleteItems(at: [indexPath])
+            self.allNotes.remove(at: self.allNotes.startIndex.distance(to: indexForAllNotes))
+            self.filteredNotes.remove(at: indexPath.item)
+        }, completion: nil)
     }
     
 }
 
+extension NotesViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            filteredNotes = allNotes
+            searchBar.resignFirstResponder()
+        } else {
+            filteredNotes = allNotes.filter({
+                guard let noteText = $0.text else {return false}
+                return noteText.contains(searchText)
+            })
+        }
+        collectionView.reloadData()
+    }
+    
+}
