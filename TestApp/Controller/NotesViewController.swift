@@ -46,9 +46,10 @@ class NotesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadContent()
+        loadMockContent()
     }
-
-    // MARK: Config
+    
+    // MARK: Loading content
     
     private func loadContent() {
         do {
@@ -61,7 +62,18 @@ class NotesViewController: UIViewController {
         }
         
     }
-
+    
+    private func loadMockContent() {
+        DataManager.shared.loadMockNotes { (notes, error) in
+            guard error == nil else {
+                print("Error while loading notes: " + (error?.localizedDescription ?? ""))
+                return
+            }
+            print("Mock notes fetched. Don't perform any action.")
+            
+        }
+    }
+    
     // MARK: Navigation
     
     public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

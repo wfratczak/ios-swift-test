@@ -11,6 +11,7 @@
 		152DB2341ED52033002FDFD0 /* Exo-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 152DB2311ED5202C002FDFD0 /* Exo-Medium.otf */; };
 		152DB2351ED52033002FDFD0 /* Exo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 152DB2321ED5202C002FDFD0 /* Exo-Bold.otf */; };
 		152DB2361ED52033002FDFD0 /* Exo-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 152DB2331ED5202C002FDFD0 /* Exo-Regular.otf */; };
+		1549808C1EDD14F00033713E /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1549808B1EDD14F00033713E /* UIViewController+Alert.swift */; };
 		154A42741ED6811C00B58E9C /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154A42731ED6811C00B58E9C /* DataManager.swift */; };
 		157CE0561ED5308C0075AC43 /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157CE0551ED5308C0075AC43 /* NoteViewController.swift */; };
 		77C4EFC4CDBE342DEBF97E0A /* Pods_TestApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D08386E547019DFBFFC402 /* Pods_TestApp.framework */; };
@@ -29,6 +30,7 @@
 		152DB2311ED5202C002FDFD0 /* Exo-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo-Medium.otf"; sourceTree = "<group>"; };
 		152DB2321ED5202C002FDFD0 /* Exo-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo-Bold.otf"; sourceTree = "<group>"; };
 		152DB2331ED5202C002FDFD0 /* Exo-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo-Regular.otf"; sourceTree = "<group>"; };
+		1549808B1EDD14F00033713E /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+Alert.swift"; path = "View/UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		154A42731ED6811C00B58E9C /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		157CE0551ED5308C0075AC43 /* NoteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteViewController.swift; sourceTree = "<group>"; };
 		2678843C0F4035D5D20EC07D /* Pods-TestApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestApp/Pods-TestApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				8429C9C61EAECCA8004A5E2B /* AppDelegate.swift */,
+				1549808B1EDD14F00033713E /* UIViewController+Alert.swift */,
 				8429C9DB1EAECD0B004A5E2B /* Controller */,
 				8429C9DC1EAECD0B004A5E2B /* Model */,
 				8429C9DD1EAECD0B004A5E2B /* View */,
@@ -282,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1549808C1EDD14F00033713E /* UIViewController+Alert.swift in Sources */,
 				8429C9DF1EAECD2C004A5E2B /* NotesViewController.swift in Sources */,
 				152DB22E1ED51E6C002FDFD0 /* LaunchViewController.swift in Sources */,
 				157CE0561ED5308C0075AC43 /* NoteViewController.swift in Sources */,

@@ -57,7 +57,7 @@ class NoteViewController: UIViewController {
             deleteButton.alpha = 1
         }
     }
-
+    
     // MARK: Actions
     
     @IBAction func cancelButtonAction(_ sender: UIButton) {
@@ -84,7 +84,7 @@ class NoteViewController: UIViewController {
     
     private func saveNoteAndDismiss() {
         if note == nil {
-            note = NoteModel.object()
+            note = try? NoteModel.object()
         }
         guard let note = note else {
             print("Can not save the note. Note instance is nil")

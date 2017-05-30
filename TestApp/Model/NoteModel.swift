@@ -7,6 +7,10 @@
 import Foundation
 import CoreData
 
+enum NoteModelError: Error {
+    case initialization
+}
+
 extension NoteModel {
 
     override public func awakeFromInsert() {
@@ -14,10 +18,9 @@ extension NoteModel {
         self.date = Date() as NSDate
     }
     
-    static func object() -> NoteModel? {
+    static func object() throws -> NoteModel {
         guard let context = DataManager.shared.context else {
-            print("Have not set the context for DataManager. Setup DataManager with context.")
-            return nil
+            throw NoteModelError.initialization
         }
         return NoteModel(context: context)
     }
