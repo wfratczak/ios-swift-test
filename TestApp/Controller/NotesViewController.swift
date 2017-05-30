@@ -190,7 +190,7 @@ extension NotesViewController: UISearchBarDelegate {
         } else {
             filteredNotes = allNotes.filter({
                 guard let noteText = $0.text else {return false}
-                return noteText.contains(searchText)
+                return noteText.localizedCaseInsensitiveContains(searchText)
             })
         }
         collectionView.reloadData()
