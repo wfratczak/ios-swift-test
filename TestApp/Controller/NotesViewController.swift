@@ -107,6 +107,7 @@ extension NotesViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? NoteCell, let date = filteredNotes[indexPath.item].date else {return}
         cell.dateLabel.text = defaultDateFormatter.string(from: date as Date)
+        cell.noteLabel.text = filteredNotes[indexPath.item].text
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
