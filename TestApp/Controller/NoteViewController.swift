@@ -87,7 +87,8 @@ class NoteViewController: UIViewController {
             note = try? NoteModel.object()
         }
         guard let note = note else {
-            print("Can not save the note. Note instance is nil")
+            print("Note instance is nil")
+            showErrorAlert(with: "Can not save note. Please try again!")
             return
         }
         
@@ -97,7 +98,7 @@ class NoteViewController: UIViewController {
             delegate?.noteViewControllerDidSave(note: note)
             dismiss(animated: true, completion: nil)
         } catch {
-            print("Can not save current note")
+            showErrorAlert(with: "Can not save note. Please try again!")
         }
     }
     
@@ -129,7 +130,7 @@ class NoteViewController: UIViewController {
                 self.delegate?.noteViewControllerDidDelete(note: note)
             })
         } catch {
-            print("Can not delete current note.")
+            showErrorAlert(with: "Can not delete note. Please try again!")
         }
     }
     
